@@ -2,8 +2,10 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 #include "peri_util.h"
 
 #define PDEVICE "/dev/usb/lp0"
@@ -20,19 +22,28 @@ int do_action(int fd, int action) {
       return open_cash_drawer(fd);
       break;
   }
- }
+}
 
-int main(void)
+void show_usage(void) {
+  printf("1. Cut paper\n2. Open cash drawer\n");
+}
+
+int main(int argc, char **argv)
 {
   int fd;
-	fd = open(PDEVICE, O_RDWR );
+  int action;
+
+  if (argc <= 1) {
+    show_usage();
+    return -1;
+  }
+
+  action = atoi(argv[1]);
+
+	fd = open(PDEVICE, O_RDWR);
   if (fd < 0) {
     return -1;
   }
 
-  if (do_action(fd, CUT_PAPER) < 0) {
-    return -1;
-  }
-
-  return 0;
+  return do_action(fd, action);
 }
