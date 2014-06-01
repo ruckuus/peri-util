@@ -4,16 +4,20 @@
 
 TARGET_CROSS=/usr/local/arm/4.2.2-eabi/usr/bin/arm-linux-
 
-CC=$(TARGET_CROSS)gcc
+#CC=$(TARGET_CROSS)gcc
+CC=cc
 CFLAGS=-W -Wall
+DEPS=peri_util.h
+OBJS=pos_util.o cash_drawer.o cut_paper.o
 
-all:cash_drawer cut_paper
+all:pos_util
 
-cash_drawer:
-	$(CC) $(CFLAGS) cash_drawer.c -o cash_drawer
+%.o: %.c $(DEPS) 
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-cut_paper:
-	$(CC) $(CFLAGS) cut_paper.c -o cut_paper
+pos_util:$(OBJS) 
+	$(CC) $(CFLAGS) -o $@ $^
+
 clean:
-	rm -f test_printer *.c~ Makefile~ cut_paper cash_drawer
+	rm -f  *~ Makefile~  *.o pos_util
 

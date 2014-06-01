@@ -1,24 +1,13 @@
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
 #include <unistd.h>
+#include "peri_util.h"
 
-#define PDEVICE "/dev/usb/lp0"
-
-int main(void)
+int open_cash_drawer(int fd)
 {
-	int fd;
 	char pulse[5] = {0x1b, 0x70, 0x00, 0x25, 0x25};
 
-	fd = open(PDEVICE, O_RDWR );
 	if (fd < 0) {
-		perror("DEVICE");
+    return -1;
 	}
 
-	printf("Send Pulse\n");
-	write(fd, pulse, 5);
-
-	return 0;
+	return write(fd, pulse, 5);
 }
